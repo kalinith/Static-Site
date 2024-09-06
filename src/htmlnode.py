@@ -46,7 +46,10 @@ class LeafNode(HTMLNode):
             post = ""
         else:
             pre = f"<{self.tag}"
-            post = f"</{self.tag}>"
+            if self.tag == "img":
+                post = ""
+            else:
+                post = f"</{self.tag}>"
             attr = str(self.props_to_html())+">"
 
         return pre+attr+body+post
