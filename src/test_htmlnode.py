@@ -15,17 +15,17 @@ class TestHTMLNode(unittest.TestCase):
         self.assertEqual(nodetest, "<p>This is a paragraph</p>")
 
     def test_true(self):
-        node5 = LeafNode("This is a Leafnode", "p")
-        node6 = LeafNode("This is a paragraph of text.", tag="p")
-        node7 = LeafNode("Click me!", "a", {"href": "https://www.google.com"})
-        node8 = LeafNode("this is plain text")
+        node5 = LeafNode("p", "This is a Leafnode",)
+        node6 = LeafNode(value="This is a paragraph of text.", tag="p")
+        node7 = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        node8 = LeafNode(None, "this is plain text")
         node9 = ParentNode(
             "p",
             [
-                LeafNode("Bold text", "b"),
-                LeafNode("Normal text", None),
-                LeafNode("italic text", "i"),
-                LeafNode("Normal text", None),
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
             ],
         )
         node10 = ParentNode(
