@@ -57,3 +57,8 @@ class TestHTMLNode(unittest.TestCase):
         self.assertTrue(node8.to_html() == f"this is plain text")
         self.assertTrue(node9.to_html() == node10.to_html())
         self.assertTrue(node11.to_html() == "<p><i><b>Boldly Going</b></i>nowhere<i>slowly</i></p>")
+
+
+if __name__ == "__main__":
+    unittest.main()
+
