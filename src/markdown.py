@@ -6,6 +6,8 @@ from textnode import (
     text_type_bold,
     text_type_italic,
     text_type_code,
+    text_type_image,
+    text_type_link,
 )
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
@@ -41,3 +43,47 @@ def extract_markdown_links(text):
     for result in re.findall(r"(?<!!)\[(.*?)\]\((.*?)\)", text):
         link_values.append(result)
     return link_values
+
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != text_type_text:
+            new_nodes.append(node)
+            continue
+        image_list = extract_markdown_images(node.text)
+        if image_list == []:
+            new.nodes.append(node)
+            continue
+        split_nodes = []
+        text_list = re.split(r'!\[.*?\]\(.*?\)', node.text)
+        for text in text_list:
+            if text != "":
+                split_nodes.append(TextNode(text, text_type_text))
+            if len(image_list) != 0:
+                img_text, img_url = image_list.pop(0)
+                split_nodes.append(TextNode(img_text,text_type_image,  img_url))
+        new_nodes.extend(split_nodes)
+    return new_nodes
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != text_type_text:
+            new_nodes.append(node)
+            continue
+        link_list = extract_markdown_links(node.text)
+        if link_list == []:
+            new_nodes.append(node)
+            continue
+        split_nodes = []
+        text_list = re.split(r'(?<!!)\[.*?\]\(.*?\)', node.text)
+        for text in text_list:
+            if text != "":
+                split_nodes.append(TextNode(text, text_type_text))
+            if len(link_list) != 0:
+                alt_text, url = link_list.pop(0)
+                split_nodes.append(TextNode(alt_text,text_type_link,  url))
+        new_nodes.extend(split_nodes)
+    return new_nodes
+
