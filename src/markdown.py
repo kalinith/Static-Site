@@ -53,7 +53,7 @@ def split_nodes_image(old_nodes):
             continue
         image_list = extract_markdown_images(node.text)
         if image_list == []:
-            new.nodes.append(node)
+            new_nodes.append(node)
             continue
         split_nodes = []
         text_list = re.split(r'!\[.*?\]\(.*?\)', node.text)
@@ -86,4 +86,14 @@ def split_nodes_link(old_nodes):
                 split_nodes.append(TextNode(alt_text,text_type_link,  url))
         new_nodes.extend(split_nodes)
     return new_nodes
+
+def text_to_textnodes(text):
+    initial_node = []
+    initial_node.append(TextNode(text, text_type_text))
+    image_nodes = split_nodes_image(initial_node)
+    link_nodes = split_nodes_link(image_nodes)
+    bold_nodes = split_nodes_delimiter(link_nodes, '**', text_type_bold)
+    ital_nodes = split_nodes_delimiter(bold_nodes, '*', text_type_italic)
+    list_of_nodes = split_nodes_delimiter(ital_nodes, '`', text_type_code)
+    return list_of_nodes
 

@@ -6,6 +6,7 @@ from markdown import (
     split_nodes_image,
     split_nodes_link,
     split_nodes_delimiter,
+    text_to_textnodes,
     )
 from textnode import (
     TextNode,
@@ -70,6 +71,45 @@ class TestMarkup(unittest.TestCase):
         )
         ]
         self.assertEqual(new_nodes, result)
+
+    def test_text_textnodes(self):
+        text = 'This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)'
+        nodelist = text_to_textnodes(text)
+        result = [
+            TextNode("This is ", text_type_text),
+            TextNode("text", text_type_bold),
+            TextNode(" with an ", text_type_text),
+            TextNode("italic", text_type_italic),
+            TextNode(" word and a ", text_type_text),
+            TextNode("code block", text_type_code),
+            TextNode(" and an ", text_type_text),
+            TextNode("obi wan image", text_type_image, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(" and a ", text_type_text),
+            TextNode("link", text_type_link, "https://boot.dev"),
+        ]
+        nodelist2 = text_to_textnodes('**Hobbits**')
+        result2 = [TextNode("Hobbits", text_type_bold),]
+        nodelist3 = text_to_textnodes('*In* a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole, filled with the ends')
+        result3 = [
+            TextNode('In', text_type_italic),
+            TextNode(' a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole, filled with the ends', text_type_text),
+        ]
+        nodelist4 = text_to_textnodes('of worms and an oozy smell, nor yet a dry, bare, sandy hole with nothing in it to sit down on or to')
+        result4 = [TextNode('of worms and an oozy smell, nor yet a dry, bare, sandy hole with nothing in it to sit down on or to', text_type_text),]
+        text2 = 'eat: it was a [hobbit-hole](https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"), and that means comfort.'
+        nodelist5 = text_to_textnodes(text2)
+        result5 = [
+            TextNode('eat: it was a ', text_type_text),
+            TextNode('hobbit-hole', text_type_link, 'https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"'),
+            TextNode(', and that means comfort.', text_type_text),
+        ]
+
+        self.assertEqual(nodelist, result)
+        self.assertEqual(nodelist2, result2)
+        self.assertEqual(nodelist3, result3)
+        self.assertEqual(nodelist4, result4)
+        self.assertEqual(nodelist5, result5)
+
 
 if __name__ == "__main__":
     unittest.main()
