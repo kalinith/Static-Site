@@ -22,7 +22,7 @@ def block_to_block_type(block):
     if re.match(r'^#{1,6} ', block):
         block_type = block_type_heading
 
-    if block[0:3] == '```' and block[-1:-4:-1] == '```':
+    if len(block) >= 6 and block[0:3] == '```' and block[-1:-4:-1] == '```':
         block_type = block_type_code
 
     quote_lines = re.findall(r'^>', block, flags=re.M)
