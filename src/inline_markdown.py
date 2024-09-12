@@ -19,7 +19,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
            split_nodes = []
            text_list = node.text.split(delimiter)
            if len(text_list) % 2 == 0:
-               raise Exception(f"invalid markdown syntax found in formatted section")
+               raise Exception(f"invalid markdown syntax found in formatted section:\n{node.text}")
            for i in range(len(text_list)):
                if text_list[i] == "":
                    continue
