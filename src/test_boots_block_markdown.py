@@ -9,6 +9,7 @@ from block_markdown import (
     block_type_ordered_list,
     block_type_unordered_list,
     block_type_quote,
+    extract_title,
 )
 
 class TestMarkdownToHTML(unittest.TestCase):
@@ -167,6 +168,47 @@ this is paragraph text
             html,
             "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
         )
+
+    def test_ET_eq(self):
+        actual = extract_title("# This is a title")
+        self.assertEqual(actual, "This is a title")
+
+    def test_ET_eq_double(self):
+        actual = extract_title(
+            """
+# This is a title
+
+# This is a second title that should be ignored
+"""
+        )
+        self.assertEqual(actual, "This is a title")
+
+    def test_ET_eq_long(self):
+        actual = extract_title(
+            """
+# title
+
+this is a bunch
+
+of text
+
+* and
+* a
+* list
+"""
+        )
+        self.assertEqual(actual, "title")
+
+    def test_ET_none(self):
+        try:
+            extract_title(
+                """
+no title
+"""
+            )
+            self.fail("Should have raised an exception")
+        except Exception as e:
+            pass
 
 
 if __name__ == "__main__":

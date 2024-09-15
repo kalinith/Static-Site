@@ -108,3 +108,15 @@ def markdown_to_html_node(markdown):
             children.append(ParentNode('ol',list_line,None))
     div = ParentNode('div',children,None)
     return div
+
+def extract_title(markdown):
+    heading = ""
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        if block_to_block_type(block) == block_type_heading:
+            if re.match(r'^#{1} ', block):
+                heading = block[2:]
+                return heading.strip()
+    if heading == "":
+        raise Exception("No h1 header found")
+    return heading.strip()

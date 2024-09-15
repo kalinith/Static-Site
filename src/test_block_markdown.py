@@ -1,6 +1,6 @@
 import unittest
 
-from block_markdown import markdown_to_blocks, block_to_block_type
+from block_markdown import markdown_to_blocks, block_to_block_type, extract_title
 
 
 class TestBlockMarkup(unittest.TestCase):
@@ -96,6 +96,21 @@ _ third item'''
         self.assertEqual("ordered_list", block_to_block_type(o_list_test2))
         self.assertEqual("paragraph", block_to_block_type(o_list_test3))
         self.assertEqual("paragraph", block_to_block_type(o_list_test4))
+
+    def test_title_extract(self):
+        node = "# hello"
+        node2 = """# This is the title
+
+but this is the rest"""
+        node3 = "# how many titles could there be"
+        node4 = "## no h1 title here"
+
+        self.assertEqual("hello", extract_title(node))
+        self.assertEqual("This is the title", extract_title(node2))
+        self.assertEqual("how many titles could there be", extract_title(node3))
+        self.assertRaises(Exception, extract_title, node4)
+
+
 
 if __name__ == "__main__":
     unittest.main()
