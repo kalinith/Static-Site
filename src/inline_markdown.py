@@ -93,7 +93,7 @@ def text_to_textnodes(text):
     image_nodes = split_nodes_image(initial_node)
     link_nodes = split_nodes_link(image_nodes)
     bold_nodes = split_nodes_delimiter(link_nodes, '**', text_type_bold)
-    ital_nodes = split_nodes_delimiter(bold_nodes, '*', text_type_italic)
+    ital_nodes = split_nodes_delimiter(bold_nodes, '_', text_type_italic)
     list_of_nodes = split_nodes_delimiter(ital_nodes, '`', text_type_code)
     return list_of_nodes
 

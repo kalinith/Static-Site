@@ -15,7 +15,7 @@ def clean_dir(directory):
         shutil.rmtree(directory)
     elif check == False:
         raise Exception(f"{directory} is not a directory")
-    os.mkdir(directory)
+    os.makedirs(directory)
     print(f"{directory} was created")
     return directory
 
@@ -81,16 +81,24 @@ def generate_page(from_path, template_path, dest_path):
                 if is_dir == False:
                     shutil.rmtree(dir_to_add)
                 if is_dir != True:
-                    os.mkdir(dir_to_add)
+                    os.makedirs(dir_to_add)
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
     if check_dir_valid(dir_path_content) == None:
         raise Exception(f"{dir_path_content} does not exist")
     dirtree = os.listdir(dir_path_content)
+    print(dirtree)
     for content in dirtree:
         new_path_content = os.path.join(dir_path_content, content)
+        print(f"{content}: {new_path_content}")
         if check_dir_valid(new_path_content):
+            print(f"checking if {new_path_content} exists")
             new_dest_dir = os.path.join(dest_dir_path, content)
+            if check_dir_valid(new_dest_dir) == False:
+                raise Exception(f"{new_dest_dir} does not exist")
+            if check_dir_valid(new_dest_dir) != True:
+                os.makedirs(new_dest_dir)
+                print(f"making new folder {new_dest_dir}")
             generate_pages_recursive(new_path_content, template_path, new_dest_dir)
         else:
             filename = (os.path.splitext(content)[0]+'.html')
