@@ -35,7 +35,7 @@ def populate_directory(source_dir, dest_dir):
             if result != os.path.join(dest_dir, content):
                 raise Exception("file not copied")
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     print(f"Reading markdown data from {from_path}........")
     if check_dir_valid(from_path) == False:
@@ -59,8 +59,8 @@ def generate_page(from_path, template_path, dest_path):
     title = extract_title(markdown)
     html_document = template.replace(r"{{ Title }}", title)
     html_content = html_document.replace(r"{{ Content }}", content)
-    html_href = html_content.replace(r"href=""/", "href=""{dest_path}")
-    html = html_href.replace(r"src=""/", "src=""{dest_path}")
+    html_href = html_content.replace(r"href=""/", "href=""{basepath}")
+    html = html_href.replace(r"src=""/", "src=""{basepath}")
 
     print(f"writing htm to {dest_path}.......................")
 
@@ -85,7 +85,7 @@ def generate_page(from_path, template_path, dest_path):
                 if is_dir != True:
                     os.makedirs(dir_to_add)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     if check_dir_valid(dir_path_content) == None:
         raise Exception(f"{dir_path_content} does not exist")
     dirtree = os.listdir(dir_path_content)
@@ -101,8 +101,8 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
             if check_dir_valid(new_dest_dir) != True:
                 os.makedirs(new_dest_dir)
                 print(f"making new folder {new_dest_dir}")
-            generate_pages_recursive(new_path_content, template_path, new_dest_dir)
+            generate_pages_recursive(new_path_content, template_path, new_dest_dir, basepath)
         else:
             filename = (os.path.splitext(content)[0]+'.html')
             dest_file = os.path.join(dest_dir_path, filename)
-            generate_page(new_path_content, template_path, dest_file)
+            generate_page(new_path_content, template_path, dest_file, basepath)
